@@ -47,6 +47,8 @@ class InventoryPage(BasePage):
     def agregar_producto(self, nombre):
         self.log.info(f"Agregando al carrito: {nombre}")
         self.hacer_click(self._boton_del_producto(nombre))
+        # espero a que aparezca el numerito del carrito antes de seguir
+        self.wait.until(EC.visibility_of_element_located(self.BADGE_CARRITO))
 
     def quitar_producto(self, nombre):
         self.log.info(f"Quitando del carrito: {nombre}")
@@ -61,7 +63,8 @@ class InventoryPage(BasePage):
 
     def ir_al_carrito(self):
         self.hacer_click(self.ICONO_CARRITO)
-        self.wait.until(EC.url_contains("cart.html"))
+        # Espero a que cargue el carrito (con la URL sola no alcanzaba)
+        self.wait.until(EC.text_to_be_present_in_element(self.TITULO, "Your Cart"))
 
     def cerrar_sesion(self):
         self.hacer_click(self.BOTON_MENU)
